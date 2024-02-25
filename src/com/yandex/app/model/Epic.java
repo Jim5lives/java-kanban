@@ -1,11 +1,21 @@
+package com.yandex.app.model;
 import java.util.ArrayList;
 
 public class Epic extends Task {
+    private ArrayList<Integer> subTasksArray = new ArrayList<>();
 
-    ArrayList<Integer> subTasksArray = new ArrayList<>();
-
-    public Epic(String name, String description) { // конструктор без id
+    public Epic(String name, String description) {
         super(name, description);
+    }
+
+    // getter
+    public ArrayList<Integer> getSubTasksArray() {
+        return subTasksArray;
+    }
+
+    // setter
+    public void setSubTasksArray(ArrayList<Integer> subTasksArray) {
+        this.subTasksArray = subTasksArray;
     }
 
     // метод для привязки сабтаска к эпику (добавляем id сабтаска в массив эпика)
