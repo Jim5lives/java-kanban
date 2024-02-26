@@ -1,4 +1,4 @@
-package com.yandex.app.service;
+package com.yandex.app.model;
 
 public enum Progress {
     NEW,

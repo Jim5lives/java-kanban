@@ -1,5 +1,4 @@
 package com.yandex.app.model;
-import com.yandex.app.service.Progress;
 
 import java.util.Objects;
 

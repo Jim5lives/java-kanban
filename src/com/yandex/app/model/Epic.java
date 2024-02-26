@@ -22,16 +22,15 @@ public class Epic extends Task {
     public void linkSubTaskToEpic(int epicId) {
         subTasksArray.add(epicId);
     }
-    // метод для отвязки сабтаска от эпика (убираем id сабтаска из массива эпика)
-    public void removeSubTaskFromEpic(int epicId) {
+    // метод для отвязки сабтаска из массива эпика
+    public void removeSubTaskFromEpic(Integer epicId) {
         subTasksArray.remove(epicId);
     }
     // удаляем все сабтаски из эпика
     public void clearAllSubTaskFromEpic() {
         subTasksArray.clear();
     }
-
-    public ArrayList<Integer> getSubtasksList(int epicId) {
+    public ArrayList<Integer> getSubtasksList() {
         return subTasksArray;
     }
 
