@@ -86,7 +86,7 @@ public class TaskManager {
         return epics.remove(id);
     }
 
-//----------------------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------------
     // SUBTASKS
     //a. Получение списка всех задач.
     public ArrayList<SubTask> getAllSubTasks() {
@@ -120,7 +120,7 @@ public class TaskManager {
     //e. Обновление. Новая версия объекта с верным идентификатором передаётся в виде параметра.
     public SubTask updateSubTask(SubTask updatedSubTask) {
         subTasks.put(updatedSubTask.getId(), updatedSubTask);
-        setEpicStatus( epics.get(updatedSubTask.getEpicId()));
+        setEpicStatus(epics.get(updatedSubTask.getEpicId()));
         return updatedSubTask;
     }
 
@@ -133,7 +133,7 @@ public class TaskManager {
         return subTasks.remove(id);
     }
 
-//----------------------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------------
 //    Дополнительные методы:
 //    a. Получение списка всех подзадач определённого эпика.
     public ArrayList<SubTask> getSubtasksFromEpic(int id) {
@@ -146,10 +146,9 @@ public class TaskManager {
         return subTasksInSelectedEpic;
     }
 
-// изменение статуса эпика
+    // изменение статуса эпика
     private Epic setEpicStatus(Epic epic) {
         int subTasksDone = 0;
-        int subTasksInProgress = 0;
         int subtasksNew = 0;
         for (SubTask subTask : getSubtasksFromEpic(epic.getId())) {
             if (subTask.getStatus() == Progress.DONE) {
@@ -160,17 +159,19 @@ public class TaskManager {
             } else {
                 subtasksNew++;
             }
-            if (epic.getSubTasksArray() == null || subtasksNew == epic.getSubTasksArray().size()) {
-                epic.setStatus(Progress.NEW);
-            } else if (subTasksDone == epic.getSubTasksArray().size()) {
+            if (subTasksDone == epic.getSubTasksArray().size()) {
                 epic.setStatus(Progress.DONE);
             } else {
                 epic.setStatus(Progress.IN_PROGRESS);
             }
         }
+        if (subtasksNew == epic.getSubTasksArray().size()) {
+            epic.setStatus(Progress.NEW);
+        }
         return epic;
     }
-    private int generateId() { // генератор id
+    private int generateId () { // генератор id
         return id++;
     }
+
 }
