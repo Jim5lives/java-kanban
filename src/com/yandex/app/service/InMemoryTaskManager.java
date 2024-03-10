@@ -1,15 +1,15 @@
 package com.yandex.app.service;
 
 import com.yandex.app.model.*;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
-    private HashMap<Integer, Task> tasks = new HashMap<>();
-    private HashMap<Integer, SubTask> subTasks = new HashMap<>();
-    private HashMap<Integer, Epic> epics = new HashMap<>();
+    private Map<Integer, Task> tasks = new HashMap<>();
+    private Map<Integer, SubTask> subTasks = new HashMap<>();
+    private Map<Integer, Epic> epics = new HashMap<>();
     private HistoryManager historyManager;
     private int id = 0;
 
@@ -20,7 +20,7 @@ public class InMemoryTaskManager implements TaskManager {
     // TASK
     //a. Получение списка всех задач.
     @Override
-    public ArrayList<Task> getAllTasks() {
+    public List<Task> getAllTasks() {
         return new ArrayList<>(tasks.values());
     }
 
@@ -33,19 +33,11 @@ public class InMemoryTaskManager implements TaskManager {
     //c. Получение по идентификатору.
     @Override
     public Task getTask(int id) {
-        if (tasks.containsKey(id)) {
-
-            Task currentTask = tasks.get(id);
-            Task taskToHistory = new Task(null, null);
-
-            taskToHistory.setName(currentTask.getName());
-            taskToHistory.setDescription(currentTask.getDescription());
-            taskToHistory.setStatus(currentTask.getStatus());
-            taskToHistory.setId(currentTask.getId());
-
-            historyManager.add(taskToHistory);
-        }
-        return tasks.get(id);
+            Task task = tasks.get(id);
+            if (task != null) {
+                historyManager.add(task);
+            }
+        return task;
     }
 
     //d. Создание. Сам объект должен передаваться в качестве параметра.
@@ -73,7 +65,7 @@ public class InMemoryTaskManager implements TaskManager {
     // EPIC
     //a. Получение списка всех задач.
     @Override
-    public ArrayList<Epic> getAllEpics() {
+    public List<Epic> getAllEpics() {
         return new ArrayList<>(epics.values());
     }
 
@@ -87,20 +79,11 @@ public class InMemoryTaskManager implements TaskManager {
     //c. Получение по идентификатору.
     @Override
     public Epic getEpic(int id) {
-        if (epics.containsKey(id)) {
-
-            Epic currentEpic = epics.get(id);
-            Epic epicToHistory = new Epic(null, null);
-
-            epicToHistory.setName(currentEpic.getName());
-            epicToHistory.setDescription(currentEpic.getDescription());
-            epicToHistory.setStatus(currentEpic.getStatus());
-            epicToHistory.setId(currentEpic.getId());
-            epicToHistory.setSubTasksArray(currentEpic.getSubTasksArray());
-
-            historyManager.add(epicToHistory);
+        Epic epic = epics.get(id);
+        if (epic != null) {
+            historyManager.add(epic);
         }
-        return epics.get(id);
+        return epic;
     }
 
     //d. Создание. Сам объект должен передаваться в качестве параметра.
@@ -123,7 +106,7 @@ public class InMemoryTaskManager implements TaskManager {
     //f. Удаление по идентификатору.
     @Override
     public Epic deleteEpic(int id) {
-        ArrayList<SubTask> subTasksToDelete = getSubtasksFromEpic(id);
+        List<SubTask> subTasksToDelete = getSubtasksFromEpic(id);
         for (SubTask subTask : subTasksToDelete) {
             subTasks.remove(subTask.getId());
         }
@@ -134,7 +117,7 @@ public class InMemoryTaskManager implements TaskManager {
     // SUBTASKS
     //a. Получение списка всех задач.
     @Override
-    public ArrayList<SubTask> getAllSubTasks() {
+    public List<SubTask> getAllSubTasks() {
         return new ArrayList<>(subTasks.values());
     }
 
@@ -151,19 +134,11 @@ public class InMemoryTaskManager implements TaskManager {
     //c. Получение по идентификатору.
     @Override
     public SubTask getSubtask(int id) {
-        if (subTasks.containsKey(id)) {
-            SubTask currentSubTask = subTasks.get(id);
-            SubTask subTaskToHistory = new SubTask(null, null, -1);
-
-            subTaskToHistory.setName(currentSubTask.getName());
-            subTaskToHistory.setDescription(currentSubTask.getDescription());
-            subTaskToHistory.setStatus(currentSubTask.getStatus());
-            subTaskToHistory.setId(currentSubTask.getId());
-            subTaskToHistory.setEpicId(currentSubTask.getEpicId());
-
-            historyManager.add(subTaskToHistory);
-        }
-        return subTasks.get(id);
+            SubTask subTask = subTasks.get(id);
+            if (subTask != null) {
+                historyManager.add(subTask);
+            }
+            return subTask;
     }
 
     //d. Создание. Сам объект должен передаваться в качестве параметра.
@@ -199,10 +174,10 @@ public class InMemoryTaskManager implements TaskManager {
 //    Дополнительные методы:
 //    a. Получение списка всех подзадач определённого эпика.
     @Override
-    public ArrayList<SubTask> getSubtasksFromEpic(int id) {
+    public List<SubTask> getSubtasksFromEpic(int id) {
         Epic selectedEpic = epics.get(id);
-        ArrayList<Integer> subTasksIdsArray = selectedEpic.getSubtasksList();
-        ArrayList<SubTask> subTasksInSelectedEpic = new ArrayList<>();
+        List<Integer> subTasksIdsArray = selectedEpic.getSubtasksList();
+        List<SubTask> subTasksInSelectedEpic = new ArrayList<>();
         for (Integer subTaskNumber : subTasksIdsArray) {
             subTasksInSelectedEpic.add(subTasks.get(subTaskNumber));
         }
@@ -228,14 +203,13 @@ public class InMemoryTaskManager implements TaskManager {
             } else {
                 subtasksNew++;
             }
-            if (subTasksDone == epic.getSubTasksArray().size()) {
-                epic.setStatus(Progress.DONE);
-            } else {
-                epic.setStatus(Progress.IN_PROGRESS);
-            }
         }
         if (subtasksNew == epic.getSubTasksArray().size()) {
             epic.setStatus(Progress.NEW);
+        } else if (subTasksDone == epic.getSubTasksArray().size()) {
+            epic.setStatus(Progress.DONE);
+        } else {
+            epic.setStatus(Progress.IN_PROGRESS);
         }
         return epic;
     }

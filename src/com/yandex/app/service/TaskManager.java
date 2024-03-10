@@ -4,13 +4,12 @@ import com.yandex.app.model.Epic;
 import com.yandex.app.model.SubTask;
 import com.yandex.app.model.Task;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface TaskManager {
     // TASK
     //a. Получение списка всех задач.
-    ArrayList<Task> getAllTasks();
+    List<Task> getAllTasks();
 
     //b. Удаление всех задач.
     void deleteAllTasks();
@@ -29,7 +28,7 @@ public interface TaskManager {
 
     // EPIC
     //a. Получение списка всех задач.
-    ArrayList<Epic> getAllEpics();
+    List<Epic> getAllEpics();
 
     //b. Удаление всех задач.
     void deleteAllEpics();
@@ -49,7 +48,7 @@ public interface TaskManager {
     //----------------------------------------------------------------------------------------------------------------------
     // SUBTASKS
     //a. Получение списка всех задач.
-    ArrayList<SubTask> getAllSubTasks();
+    List<SubTask> getAllSubTasks();
 
     //b. Удаление всех задач.
     void deleteAllSubTasks();
@@ -69,7 +68,7 @@ public interface TaskManager {
     //----------------------------------------------------------------------------------------------------------------------
 //    Дополнительные методы:
 //    a. Получение списка всех подзадач определённого эпика.
-    ArrayList<SubTask> getSubtasksFromEpic(int id);
+    List<SubTask> getSubtasksFromEpic(int id);
 
     // получении истории
      List<Task> getHistory();

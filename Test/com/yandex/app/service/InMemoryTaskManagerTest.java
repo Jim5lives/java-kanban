@@ -1,16 +1,14 @@
+package com.yandex.app.service;
+
 import com.yandex.app.model.Epic;
 import com.yandex.app.model.Progress;
 import com.yandex.app.model.SubTask;
 import com.yandex.app.model.Task;
-import com.yandex.app.service.Managers;
-import com.yandex.app.service.TaskManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class InMemoryTaskManagerTest {
 
@@ -32,7 +30,6 @@ class InMemoryTaskManagerTest {
 
         Assertions.assertEquals(newTask1, allTasks.get(0));
         Assertions.assertEquals(newTask2, allTasks.get(1));
-
     }
 
     @Test
@@ -46,7 +43,6 @@ class InMemoryTaskManagerTest {
         List<Task> allTasks = taskManager.getAllTasks();
 
         Assertions.assertEquals(0, allTasks.size());
-
     }
 
     @Test
@@ -122,7 +118,6 @@ class InMemoryTaskManagerTest {
         Assertions.assertEquals(0, newTask1.getId());
         Assertions.assertEquals(1, newTask2.getId());
     }
-
 
     @Test
     void deleteAllEpics_ShouldDeleteAllSubtasks() {
@@ -206,31 +201,6 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void addedToHistoryTasksShouldBePreviousVersions() {
-        Task newTask = new Task("Изначальная задача", "Описание 10");
-        taskManager.addTask(newTask);
-        Epic newEpic = new Epic("Эпик 7", "Изначальное описание");
-        taskManager.addEpic(newEpic);
-        SubTask newSubTask = new SubTask("Подзадача 4", "Описание 4", 1);
-        taskManager.addSubTask(newSubTask);
-
-        taskManager.getTask(0);
-        taskManager.getEpic(1);
-        taskManager.getSubtask(2);
-        newTask.setName("Задача 100");
-        newEpic.setDescription("Описание 100");
-        newSubTask.setStatus(Progress.DONE);
-        taskManager.updateTask(newTask);
-        taskManager.updateEpic(newEpic);
-        taskManager.updateSubTask(newSubTask);
-
-        List<Task> history = taskManager.getHistory();
-        Assertions.assertEquals("Изначальная задача", history.get(0).getName());
-        Assertions.assertEquals("Изначальное описание", history.get(1).getDescription());
-        Assertions.assertEquals(Progress.NEW, history.get(2).getStatus());
-    }
-
-    @Test
     void epicStatusShouldBeChangedBySubtaskStatuses() {
         Epic epic1 = new Epic("Эпик 8", "Описание 8");
         taskManager.addEpic(epic1);
@@ -246,7 +216,4 @@ class InMemoryTaskManagerTest {
 
         Assertions.assertEquals(Progress.DONE, epic1.getStatus());
     }
-
-
-
 }

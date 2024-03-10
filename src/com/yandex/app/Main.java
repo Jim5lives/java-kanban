@@ -1,4 +1,5 @@
 package com.yandex.app;
+
 import com.yandex.app.model.Progress;
 import com.yandex.app.model.*;
 import com.yandex.app.service.Managers;
@@ -67,7 +68,7 @@ public class Main {
         System.out.println(taskManager.getAllSubTasks());
         System.out.println();
 
-        // проверяем, что статусы в истории остались прежними
+        // проверяем, что всё записалось в историю
         System.out.println("История:");
         System.out.println(taskManager.getHistory());
         System.out.println();
