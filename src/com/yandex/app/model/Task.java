@@ -57,8 +57,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return "com.yandex.app.Model.Task {" +
-                "name='" + name + '\'' +
+        return  "name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", ID=" + id +
                 ", STATUS=" + status +
@@ -76,6 +75,6 @@ public class Task {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getName(), getDescription(), getId(), getStatus());
+        return Objects.hash(getId(), getDescription());
     }
 }
