@@ -9,7 +9,7 @@ import java.util.List;
 class InMemoryHistoryManagerTest {
 
     private HistoryManager historyManager;
-    private static final int historyMaxSize = 10;
+    private static final int HISTORY_MAX_SIZE = 10;
 
     @BeforeEach
     void beforeEach() {
@@ -36,6 +36,6 @@ class InMemoryHistoryManagerTest {
         }
 
         List<Task> history = historyManager.getHistory();
-        Assertions.assertEquals(historyMaxSize, history.size());
+        Assertions.assertEquals(HISTORY_MAX_SIZE, history.size());
     }
 }
