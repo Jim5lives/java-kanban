@@ -24,13 +24,16 @@ public class Epic extends Task {
         subTasksArray.add(epicId);
     }
     // метод для отвязки сабтаска из массива эпика
+
     public void removeSubTaskFromEpic(Integer epicId) {
         subTasksArray.remove(epicId);
     }
+
     // удаляем все сабтаски из эпика
     public void clearAllSubTaskFromEpic() {
         subTasksArray.clear();
     }
+
     public List<Integer> getSubtasksList() {
         return subTasksArray;
     }

@@ -1,5 +1,6 @@
 package com.yandex.app.service;
 
+import com.yandex.app.model.Progress;
 import com.yandex.app.model.Task;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,7 +10,6 @@ import java.util.List;
 class InMemoryHistoryManagerTest {
 
     private HistoryManager historyManager;
-    private static final int HISTORY_MAX_SIZE = 10;
 
     @BeforeEach
     void beforeEach() {
@@ -28,14 +28,62 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void maxSizeOfHistoryShouldBe10 () {
-        Task newTask = new Task("Задача 2", "Описание 2");
+    void add_shouldLinkInCorrectOrder() {
+        Task task1 = new Task("Задача 2", "Описание 2", 0, Progress.NEW);
+        Task task2 = new Task("Задача 3", "Описание 3", 1, Progress.NEW);
+        Task task3 = new Task("Задача 4", "Описание 4", 2, Progress.NEW);
 
-        for (int i = 0; i < 15; i++) {
-            historyManager.add(newTask);
-        }
+        historyManager.add(task1);
+        historyManager.add(task2);
+        historyManager.add(task3);
 
         List<Task> history = historyManager.getHistory();
-        Assertions.assertEquals(HISTORY_MAX_SIZE, history.size());
+        Assertions.assertEquals(3, history.size());
+        Assertions.assertEquals(task1, history.getFirst());
+        Assertions.assertEquals(task2, history.get(1));
+        Assertions.assertEquals(task3, history.get(2));
+    }
+
+    @Test
+    void remove_shouldRemoveFromHistory() {
+        Task task1 = new Task("Задача 5", "Описание 5", 0, Progress.NEW);
+        Task task2 = new Task("Задача 6", "Описание 6", 1, Progress.NEW);
+        historyManager.add(task1);
+        historyManager.add(task2);
+
+        historyManager.remove(0);
+
+        List<Task> history = historyManager.getHistory();
+        Assertions.assertEquals(1, history.size());
+        Assertions.assertEquals(task2, history.getFirst());
+    }
+
+    @Test
+    void add_shouldDeleteExistingTaskFromHistoryAndPutItInTheEnd() {
+        Task task1 = new Task("Задача 7", "Описание 7", 0, Progress.NEW);
+        Task task2 = new Task("Задача 8", "Описание 8", 1, Progress.NEW);
+        historyManager.add(task1);
+        historyManager.add(task2);
+
+        historyManager.add(task1);
+
+        List<Task> history = historyManager.getHistory();
+        Assertions.assertEquals(2, history.size());
+        Assertions.assertEquals(task1, history.getLast());
+        Assertions.assertEquals(task2, history.getFirst());
+    }
+
+    @Test
+    void add_shouldRewriteSameAddedTask() {
+        Task task1 = new Task("Задача 9", "Описание 9", 0, Progress.NEW);
+
+        historyManager.add(task1);
+        historyManager.add(task1);
+        historyManager.add(task1);
+        historyManager.add(task1);
+
+        List<Task> history = historyManager.getHistory();
+        Assertions.assertEquals(1, history.size());
+        Assertions.assertEquals(task1, history.getFirst());
     }
 }
