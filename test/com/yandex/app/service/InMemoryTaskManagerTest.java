@@ -216,4 +216,17 @@ class InMemoryTaskManagerTest {
 
         Assertions.assertEquals(Progress.DONE, epic1.getStatus());
     }
+
+    @Test
+    void deleteSubtask_shouldRemoveSubtaskIdFromEpic() {
+        Epic epic1 = new Epic("Эпик 9", "Описание 9");
+        SubTask subTask1 = new SubTask("Подзадача 7", "Описание 7", 0);
+        taskManager.addEpic(epic1);
+        taskManager.addSubTask(subTask1);
+
+        taskManager.deleteSubtask(1);
+
+        List<Integer> epic1Array = epic1.getSubTasksArray();
+        assertEquals(0, epic1Array.size());
+    }
 }
