@@ -5,6 +5,9 @@ import com.yandex.app.model.*;
 import com.yandex.app.service.Managers;
 import com.yandex.app.service.TaskManager;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -46,6 +49,16 @@ public class Main {
         taskManager.getSubtask(3);
         taskManager.getSubtask(4);
         taskManager.getSubtask(6);
+        taskManager.getTask(0);
+        taskManager.getTask(1);
+
+        // проверяем, что всё записалось в историю
+        System.out.println("История:");
+        List<Task> history = new ArrayList<>(taskManager.getHistory());
+        for (Task task : history) {
+            System.out.println(task);
+        }
+        System.out.println();
 
         // обновляем все статусы
         task1.setStatus(Progress.DONE);
@@ -68,11 +81,6 @@ public class Main {
         System.out.println(taskManager.getAllSubTasks());
         System.out.println();
 
-        // проверяем, что всё записалось в историю
-        System.out.println("История:");
-        System.out.println(taskManager.getHistory());
-        System.out.println();
-
         // удаляем задачу и эпик
         taskManager.deleteTask(0);
         taskManager.deleteEpic(2);
@@ -81,5 +89,12 @@ public class Main {
         System.out.println(taskManager.getAllTasks());
         System.out.println(taskManager.getAllEpics());
         System.out.println(taskManager.getAllSubTasks());
+        System.out.println();
+
+        System.out.println("История после удаления:");
+        List<Task> history2 = new ArrayList<>(taskManager.getHistory());
+        for (Task task : history2) {
+            System.out.println(task);
+        }
     }
 }

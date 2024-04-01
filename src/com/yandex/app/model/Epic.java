@@ -14,25 +14,19 @@ public class Epic extends Task {
         return subTasksArray;
     }
 
-    // setter
-    public void setSubTasksArray(List<Integer> subTasksArray) {
-        this.subTasksArray = subTasksArray;
-    }
-
     // метод для привязки сабтаска к эпику (добавляем id сабтаска в массив эпика)
     public void linkSubTaskToEpic(int epicId) {
         subTasksArray.add(epicId);
     }
+
     // метод для отвязки сабтаска из массива эпика
-    public void removeSubTaskFromEpic(Integer epicId) {
-        subTasksArray.remove(epicId);
+    public void removeSubTaskFromEpic(Integer subTaskId) {
+        subTasksArray.remove(subTaskId);
     }
+
     // удаляем все сабтаски из эпика
     public void clearAllSubTaskFromEpic() {
         subTasksArray.clear();
-    }
-    public List<Integer> getSubtasksList() {
-        return subTasksArray;
     }
 
 }
