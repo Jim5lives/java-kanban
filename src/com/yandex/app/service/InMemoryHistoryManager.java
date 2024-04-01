@@ -18,14 +18,12 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void remove(int id) {
-        Node node = historyMap.get(id);
-        removeNode(node);
-        historyMap.remove(id);
+        removeNode(historyMap.remove(id));
     }
 
     @Override
     public List<Task> getHistory() {
-        return new ArrayList<>(getTasks());
+        return getTasks();
     }
 
     private void linkLast(Task task) {
@@ -41,25 +39,22 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     private void removeNode(Node node) {
         if (node != null) {
-            if (historyMap.containsKey(node.getCurrent().getId())) {
-                Node previousNode = node.getPrev();
-                Node nextNode = node.getNext();
-                if (previousNode == null && nextNode == null) {
-                    head = null;
-                    tail = null;
-                    historyMap.remove(node.getCurrent().getId());
-                    return;
-                }
-                if (previousNode == null) {
-                    nextNode.setPrev(null);
-                    head = nextNode;
-                } else if (nextNode == null) {
-                    previousNode.setNext(null);
-                    tail = previousNode;
-                } else {
-                    previousNode.setNext(nextNode);
-                    nextNode.setPrev(previousNode);
-                }
+            Node previousNode = node.getPrev();
+            Node nextNode = node.getNext();
+            if (previousNode == null && nextNode == null) {
+                head = null;
+                tail = null;
+                return;
+            }
+            if (previousNode == null) {
+                nextNode.setPrev(null);
+                head = nextNode;
+            } else if (nextNode == null) {
+                previousNode.setNext(null);
+                tail = previousNode;
+            } else {
+                previousNode.setNext(nextNode);
+                nextNode.setPrev(previousNode);
             }
         }
     }

@@ -338,6 +338,4 @@ class InMemoryTaskManagerTest {
         List<Task> history = taskManager.getHistory();
         Assertions.assertEquals(0, history.size());
     }
-
-
 }
