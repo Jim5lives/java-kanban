@@ -350,9 +350,7 @@ public class FileBackedTaskManagerTest {
 
     @Test
     void loadFromFile_shouldReturnEmptyTaskManagerIfFileIsEmpty() {
-        System.out.println("Current working directory: " + System.getProperty("user.dir"));
         File file = Paths.get("test/resources/memoryTestEmpty.csv").toFile();
-        System.out.println("File path: " + file.getAbsolutePath());
 
         taskManager = FileBackedTaskManager.loadFromFile(file);
 
@@ -392,7 +390,7 @@ public class FileBackedTaskManagerTest {
         taskManager.deleteSubtask(subTask.getId());
 
         try {
-            Path path = Paths.get("src\\resources\\memory.csv");
+            Path path = Paths.get("src/resources/memory.csv");
             List<String> strings = Files.readAllLines(path);
             String expectedString1 = "0,TASK,Таск,NEW,Описание таск";
             String expectedString2 = "1,EPIC,Эпик,NEW,Описание эпик";
