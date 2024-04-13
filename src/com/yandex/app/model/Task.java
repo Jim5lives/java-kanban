@@ -57,11 +57,8 @@ public class Task {
 
     @Override
     public String toString() {
-        return  "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", ID=" + id +
-                ", STATUS=" + status +
-                '}';
+        return  id + "," + getClass().getSimpleName().toUpperCase() + ","
+                + name + "," + status + "," + description;
     }
 
     @Override
