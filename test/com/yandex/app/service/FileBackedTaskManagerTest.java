@@ -21,6 +21,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class FileBackedTaskManagerTest {
 
     private TaskManager taskManager;
+    private static final File MEMORY_TEST_EMPTY_FILE = new File("test/resources/memoryTestEmpty.csv");
+    private static final File MEMORY_TEST_LOAD_FILE = new File("test/resources/memoryTestLoad.csv");
 
     @BeforeEach
     void beforeEach() {
@@ -350,9 +352,7 @@ public class FileBackedTaskManagerTest {
 
     @Test
     void loadFromFile_shouldReturnEmptyTaskManagerIfFileIsEmpty() {
-        File file = Paths.get("test/resources/memoryTestEmpty.csv").toFile();
-
-        taskManager = FileBackedTaskManager.loadFromFile(file);
+        taskManager = FileBackedTaskManager.loadFromFile(MEMORY_TEST_EMPTY_FILE);
 
         assertTrue(taskManager.getAllTasks().isEmpty());
         assertTrue(taskManager.getAllEpics().isEmpty());
@@ -362,9 +362,7 @@ public class FileBackedTaskManagerTest {
 
     @Test
     void loadFromFile_shouldLoadTasksAndHistoryFromFile() {
-        File file = Paths.get("test/resources/memoryTestLoad.csv").toFile();
-
-        taskManager = FileBackedTaskManager.loadFromFile(file);
+        taskManager = FileBackedTaskManager.loadFromFile(MEMORY_TEST_LOAD_FILE);
 
         List<Task> allTasks = taskManager.getAllTasks();
         List<Epic> allEpics = taskManager.getAllEpics();
