@@ -5,7 +5,6 @@ import com.yandex.app.model.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
@@ -183,10 +182,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             if (strings.isEmpty()) {
                 return fileBackedTaskManager;
             }
+            int maxId = 0;
             for (int i = 1; i < (strings.size() - 2); i++) {
                 String[] parts = strings.get(i).split(",");
                 TaskType type = TaskType.valueOf(parts[1]);
                 Task task = fileBackedTaskManager.fromString(strings.get(i));
+                maxId = Math.max(maxId, task.getId());
 
                 switch (type) {
                     case TASK:
@@ -209,21 +210,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 }
             }
             // устанавливаем поле id в taskManager на основе созданных задач
-            List<Integer> maxIds = new ArrayList<>();
-            fileBackedTaskManager.tasks.keySet().stream()
-                    .max(Comparator.naturalOrder())
-                    .ifPresent(maxIds::add);
-            fileBackedTaskManager.subTasks.keySet().stream()
-                    .max(Comparator.naturalOrder())
-                    .ifPresent(maxIds::add);
-            fileBackedTaskManager.epics.keySet().stream()
-                    .max(Comparator.naturalOrder())
-                    .ifPresent(maxIds::add);
-
-            int maxId = maxIds.stream()
-                    .max(Comparator.naturalOrder())
-                    .orElse(0);
-
             fileBackedTaskManager.id = maxId + 1;
 
             // считываем историю и добавляем в historyManager
