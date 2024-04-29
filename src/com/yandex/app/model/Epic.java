@@ -9,6 +9,10 @@ public class Epic extends Task {
         super(name, description);
     }
 
+    public Epic(String name, String description, int id, Progress status) {
+        super(name, description, id, status);
+    }
+
     // getter
     public List<Integer> getSubTasksArray() {
         return subTasksArray;
@@ -27,6 +31,11 @@ public class Epic extends Task {
     // удаляем все сабтаски из эпика
     public void clearAllSubTaskFromEpic() {
         subTasksArray.clear();
+    }
+
+    @Override
+    public TaskType getType() {
+        return TaskType.EPIC;
     }
 
 }

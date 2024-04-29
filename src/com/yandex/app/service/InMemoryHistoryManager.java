@@ -6,7 +6,7 @@ import com.yandex.app.model.Node;
 import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private Map<Integer, Node> historyMap = new HashMap<>();
+    protected Map<Integer, Node> historyMap = new HashMap<>();
     private Node head;
     private Node tail;
 

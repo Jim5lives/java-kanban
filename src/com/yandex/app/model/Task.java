@@ -55,13 +55,14 @@ public class Task {
         this.status = status;
     }
 
+    public TaskType getType() {
+        return TaskType.TASK;
+    }
+
     @Override
     public String toString() {
-        return  "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", ID=" + id +
-                ", STATUS=" + status +
-                '}';
+        return  id + "," + getType() + ","
+                + name + "," + status + "," + description;
     }
 
     @Override
