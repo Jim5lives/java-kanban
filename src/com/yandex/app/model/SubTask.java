@@ -1,5 +1,8 @@
 package com.yandex.app.model;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 public class SubTask extends Task {
     private Integer epicId;
 
@@ -8,17 +11,25 @@ public class SubTask extends Task {
         this.epicId = epicId;
     }
 
-    public SubTask(String name, String description, int id, Progress status, Integer epicId) {
-        super(name, description, id,status);
+    public SubTask(String name, String description,int id, Progress status, Integer epicId) {
+        super(name, description, id, status);
         this.epicId = epicId;
     }
+
+    public SubTask(String name, String description, Integer epicId, LocalDateTime startTime, Duration duration) {
+        super(name, description, startTime, duration);
+        this.epicId = epicId;
+    }
+
+    public SubTask(String name, String description, int id, Progress status, Integer epicId,
+                   LocalDateTime startTime, Duration duration) {
+        super(name, description, id, status, startTime, duration);
+        this.epicId = epicId;
+    }
+
 
     public Integer getEpicId() {
         return epicId;
-    }
-
-    public void setEpicId(Integer epicId) {
-        this.epicId = epicId;
     }
 
     @Override
@@ -29,6 +40,7 @@ public class SubTask extends Task {
     @Override
     public String toString() {
         return  getId() + "," + getType() + ","
-                + getName() + "," + getStatus() + "," + getDescription() + "," + getEpicId();
+                + getName() + "," + getStatus() + "," + getDescription() + "," + timeToString(getStartTime()) + ","
+                + getDuration().toMinutes()  + "," + getEpicId();
     }
 }
