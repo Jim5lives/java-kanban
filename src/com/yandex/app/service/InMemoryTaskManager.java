@@ -140,6 +140,7 @@ public class InMemoryTaskManager implements TaskManager {
         for (Epic epic : epics.values()) {
             epic.clearAllSubTaskFromEpic();
             setEpicStatus(epic);
+            setEpicEndTimeAndStartTime(epic);
         }
     }
 
@@ -249,6 +250,10 @@ public class InMemoryTaskManager implements TaskManager {
                 epic.setEndTime(latestSubTaskEndTime);
             }
 
+        } else {
+            epic.setStartTime(null);
+            epic.setDuration(null);
+            epic.setEndTime(null);
         }
     }
 

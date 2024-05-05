@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryTaskManagerTest extends TaskManagerTest<TaskManager> {
 
@@ -48,6 +48,24 @@ class InMemoryTaskManagerTest extends TaskManagerTest<TaskManager> {
     }
 
     @Test
+    void setEpicEndTimeAndStartTime_shouldSetEpicsStartTimeDurationAndEndTimeToNullWhenSubTasksAreDeleted() {
+        Epic epic = new Epic("Эпик 20", "Описание 20");
+        SubTask subTask1 = new SubTask("Подзадача 23", "Описание 23", 0,
+                LocalDateTime.of(2024, 5, 2, 11, 45), Duration.ofMinutes(15));
+        SubTask subTask2 = new SubTask("Подзадача 24", "Описание 24", 0,
+                LocalDateTime.of(2024, 5, 2, 12, 0), Duration.ofMinutes(15));
+        taskManager.addEpic(epic);
+        taskManager.addSubTask(subTask1);
+        taskManager.addSubTask(subTask2);
+
+        taskManager.deleteAllSubTasks();
+
+        assertNull(epic.getDuration());
+        assertNull(epic.getStartTime());
+        assertNull(epic.getEndTime());
+    }
+
+    @Test
     void checkCollisions_shouldTrowTimeCollisionExceptionWhenTasksTimeCollide_Case1() {
         Task task1 = new Task("Задача 1", "Описание 1",
                 LocalDateTime.of(2024, 5, 4, 1, 0), Duration.ofMinutes(15));
@@ -55,7 +73,6 @@ class InMemoryTaskManagerTest extends TaskManagerTest<TaskManager> {
                 LocalDateTime.of(2024, 5, 4, 1, 7), Duration.ofMinutes(15));
         taskManager.addTask(task1);
 
-        //метод checkCollisions() приватный и вызывается внутри метода addTask()
         assertThrows(TimeCollisionException.class, () -> taskManager.addTask(task2));
     }
 
@@ -67,7 +84,6 @@ class InMemoryTaskManagerTest extends TaskManagerTest<TaskManager> {
                 LocalDateTime.of(2024, 5, 4, 0, 55), Duration.ofMinutes(15));
         taskManager.addTask(task1);
 
-        //метод checkCollisions() приватный и вызывается внутри метода addTask()
         assertThrows(TimeCollisionException.class, () -> taskManager.addTask(task2));
     }
 
@@ -79,7 +95,6 @@ class InMemoryTaskManagerTest extends TaskManagerTest<TaskManager> {
                 LocalDateTime.of(2024, 5, 4, 0, 55), Duration.ofMinutes(60));
         taskManager.addTask(task1);
 
-        //метод checkCollisions() приватный и вызывается внутри метода addTask()
         assertThrows(TimeCollisionException.class, () -> taskManager.addTask(task2));
     }
 
@@ -91,7 +106,6 @@ class InMemoryTaskManagerTest extends TaskManagerTest<TaskManager> {
                 LocalDateTime.of(2024, 5, 4, 0, 1), Duration.ofMinutes(5));
         taskManager.addTask(task1);
 
-        //метод checkCollisions() приватный и вызывается внутри метода addTask()
         assertThrows(TimeCollisionException.class, () -> taskManager.addTask(task2));
     }
 }
