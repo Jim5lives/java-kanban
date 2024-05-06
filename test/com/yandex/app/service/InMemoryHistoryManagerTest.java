@@ -5,6 +5,9 @@ import com.yandex.app.model.Task;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 class InMemoryHistoryManagerTest {
@@ -45,7 +48,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void remove_shouldRemoveFromHistory() {
+    void remove_shouldRemoveFromHistoryFirstElement() {
         Task task1 = new Task("Задача 5", "Описание 5", 0, Progress.NEW);
         Task task2 = new Task("Задача 6", "Описание 6", 1, Progress.NEW);
         historyManager.add(task1);
@@ -56,6 +59,43 @@ class InMemoryHistoryManagerTest {
         List<Task> history = historyManager.getHistory();
         Assertions.assertEquals(1, history.size());
         Assertions.assertEquals(task2, history.getFirst());
+    }
+
+    @Test
+    void remove_shouldRemoveFromHistoryMiddleElement() {
+        Task task1 = new Task("Задача 10", "Описание 10",0, Progress.NEW,
+                LocalDateTime.of(2024, 5, 5, 0, 0), Duration.ofMinutes(15));
+        Task task2 = new Task("Задача 11", "Описание 11",1, Progress.NEW,
+                LocalDateTime.of(2024, 5, 2, 0, 15), Duration.ofMinutes(15));
+        Task task3 = new Task("Задача 12", "Описание 12", 2, Progress.NEW,
+                LocalDateTime.of(2024, 5, 2, 0, 30), Duration.ofMinutes(15));
+        historyManager.add(task1);
+        historyManager.add(task2);
+        historyManager.add(task3);
+
+        historyManager.remove(task2.getId());
+
+        List<Task> history = historyManager.getHistory();
+        Assertions.assertEquals(2, history.size());
+        Assertions.assertEquals(task1, history.getFirst());
+        Assertions.assertEquals(task3, history.getLast());
+    }
+
+    @Test
+    void remove_shouldRemoveFromHistoryLastElement() {
+        Task task1 = new Task("Задача 13", "Описание 13", 0, Progress.NEW);
+        Task task2 = new Task("Задача 14", "Описание 14", 1, Progress.NEW);
+        Task task3 = new Task("Задача 15", "Описание 15", 2, Progress.NEW);
+        historyManager.add(task1);
+        historyManager.add(task2);
+        historyManager.add(task3);
+
+        historyManager.remove(task3.getId());
+
+        List<Task> history = historyManager.getHistory();
+        Assertions.assertEquals(2, history.size());
+        Assertions.assertEquals(task1, history.getFirst());
+        Assertions.assertEquals(task2, history.getLast());
     }
 
     @Test
