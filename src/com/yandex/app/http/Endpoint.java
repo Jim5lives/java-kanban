@@ -1,0 +1,31 @@
+package com.yandex.app.http;
+
+public enum Endpoint {
+    GET_TASKS,
+    GET_TASK,
+    POST_TASK,
+    UPDATE_TASK,
+    DELETE_TASKS,
+    DELETE_TASK,
+
+    GET_EPICS,
+    GET_EPIC,
+    GET_SUBTASKS_FROM_EPIC,
+    POST_EPIC,
+    UPDATE_EPIC,
+    DELETE_EPICS,
+    DELETE_EPIC,
+
+    GET_SUBTASKS,
+    GET_SUBTASK,
+    POST_SUBTASK,
+    UPDATE_SUBTASK,
+    DELETE_SUBTASKS,
+    DELETE_SUBTASK,
+
+    GET_PRIORITIZED,
+
+    GET_HISTORY,
+
+    UNKNOWN
+}
