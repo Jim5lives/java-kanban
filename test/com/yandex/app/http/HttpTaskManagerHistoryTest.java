@@ -32,19 +32,19 @@ class HttpTaskManagerHistoryTest {
     @BeforeEach
     public void setUp() throws IOException {
         httpTaskServer = new HttpTaskServer(taskManager);
-        taskManager.deleteAllTasks();
-        taskManager.deleteAllSubTasks();
-        taskManager.deleteAllEpics();
         HttpTaskServer.start();
     }
 
     @AfterEach
     public void shutDown() {
+        taskManager.deleteAllTasks();
+        taskManager.deleteAllSubTasks();
+        taskManager.deleteAllEpics();
         HttpTaskServer.stop(0);
     }
 
     @Test
-    void GET_HISTORY_shouldReturnHistory() throws IOException, InterruptedException {
+    void getHistory_shouldReturnHistory() throws IOException, InterruptedException {
         Task taskLastInHistory = new Task("Task 1", "Description 1",
                 LocalDateTime.of(2024, 5, 15, 0, 0), Duration.ofMinutes(15));
         Epic epicFirstInHistory = new Epic("Epic 1", "Description 1");

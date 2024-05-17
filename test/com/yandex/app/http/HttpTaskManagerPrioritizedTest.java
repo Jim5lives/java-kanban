@@ -33,19 +33,19 @@ class HttpTaskManagerPrioritizedTest {
     @BeforeEach
     public void setUp() throws IOException {
         httpTaskServer = new HttpTaskServer(taskManager);
-        taskManager.deleteAllTasks();
-        taskManager.deleteAllSubTasks();
-        taskManager.deleteAllEpics();
         HttpTaskServer.start();
     }
 
     @AfterEach
     public void shutDown() {
+        taskManager.deleteAllTasks();
+        taskManager.deleteAllSubTasks();
+        taskManager.deleteAllEpics();
         HttpTaskServer.stop(0);
     }
 
     @Test
-    void GET_PRIORITIZED_shouldReturnTasksInCorrectOrder() throws IOException, InterruptedException {
+    void getPrioritized_shouldReturnTasksInCorrectOrder() throws IOException, InterruptedException {
         Task taskFirstPriority = new Task("Task 1", "Description 1",
                 LocalDateTime.of(2024, 5, 15, 0, 0), Duration.ofMinutes(15));
         Epic epic = new Epic("Epic 1", "Description 1");

@@ -31,19 +31,19 @@ class HttpTaskManagerTasksTest {
     @BeforeEach
     public void setUp() throws IOException {
         httpTaskServer = new HttpTaskServer(taskManager);
-        taskManager.deleteAllTasks();
-        taskManager.deleteAllSubTasks();
-        taskManager.deleteAllEpics();
         HttpTaskServer.start();
     }
 
     @AfterEach
     public void shutDown() {
+        taskManager.deleteAllTasks();
+        taskManager.deleteAllSubTasks();
+        taskManager.deleteAllEpics();
         HttpTaskServer.stop(0);
     }
 
     @Test
-    void POST_TASKS_shouldAddTaskWhenNoIdProvided() throws IOException, InterruptedException {
+    void postTasks_shouldAddTaskWhenNoIdProvided() throws IOException, InterruptedException {
         Task task = new Task("Task 1", "Description 1",
                 LocalDateTime.of(2024, 5, 15, 0, 0), Duration.ofMinutes(15));
         String taskJson = gson.toJson(task);
@@ -64,7 +64,7 @@ class HttpTaskManagerTasksTest {
     }
 
     @Test
-    void UPDATE_TASK_shouldUpdateTaskWhenIdIsProvided() throws IOException, InterruptedException {
+    void updateTask_shouldUpdateTaskWhenIdIsProvided() throws IOException, InterruptedException {
         Task task = new Task("Task 2", "Description 2",
                 LocalDateTime.of(2024, 5, 15, 0, 15), Duration.ofMinutes(15));
         Task task2 = new Task("Task updated", "Description updated",
@@ -88,7 +88,7 @@ class HttpTaskManagerTasksTest {
     }
 
     @Test
-    void GET_TASKS_shouldReturnAllTasksWhenNoIdIsProvided() throws IOException, InterruptedException {
+    void getTasks_shouldReturnAllTasksWhenNoIdIsProvided() throws IOException, InterruptedException {
         Task task = new Task("Task 3", "Description 3",
                 LocalDateTime.of(2024, 5, 15, 0, 45), Duration.ofMinutes(15));
         Task task2 = new Task("Task 4", "Description 4",
@@ -111,7 +111,7 @@ class HttpTaskManagerTasksTest {
     }
 
     @Test
-    void GET_TASK_shouldReturnExactTaskWhenIdIsProvided() throws IOException, InterruptedException {
+    void getTask_shouldReturnExactTaskWhenIdIsProvided() throws IOException, InterruptedException {
         Task task = new Task("Task 5", "Description 5",
                 LocalDateTime.of(2024, 5, 15, 1, 15), Duration.ofMinutes(15));
         Task task2 = new Task("Task 6", "Description 6",
@@ -134,7 +134,7 @@ class HttpTaskManagerTasksTest {
     }
 
     @Test
-    void DELETE_TASK_shouldDeleteExactTaskWhenIdIsProvided() throws IOException, InterruptedException {
+    void deleteTask_shouldDeleteExactTaskWhenIdIsProvided() throws IOException, InterruptedException {
         Task task = new Task("Task 7", "Description 7",
                 LocalDateTime.of(2024, 5, 15, 1, 45), Duration.ofMinutes(15));
         Task task2 = new Task("Task 8", "Description 8",
@@ -157,7 +157,7 @@ class HttpTaskManagerTasksTest {
     }
 
     @Test
-    void DELETE_TASKS_shouldDeleteAllTasksWhenNoIdIsProvided() throws IOException, InterruptedException {
+    void deleteTasks_shouldDeleteAllTasksWhenNoIdIsProvided() throws IOException, InterruptedException {
         Task task = new Task("Task 9", "Description 9",
                 LocalDateTime.of(2024, 5, 15, 2, 15), Duration.ofMinutes(15));
         Task task2 = new Task("Task 10", "Description 10",
@@ -177,5 +177,4 @@ class HttpTaskManagerTasksTest {
         assertEquals(200, response.statusCode());
         assertEquals(0, tasks.size(), "Некорректное количество задач");
     }
-
 }

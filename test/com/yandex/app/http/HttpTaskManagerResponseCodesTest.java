@@ -28,19 +28,19 @@ class HttpTaskManagerResponseCodesTest {
     @BeforeEach
     public void setUp() throws IOException {
         httpTaskServer = new HttpTaskServer(taskManager);
-        taskManager.deleteAllTasks();
-        taskManager.deleteAllSubTasks();
-        taskManager.deleteAllEpics();
         HttpTaskServer.start();
     }
 
     @AfterEach
     public void shutDown() {
+        taskManager.deleteAllTasks();
+        taskManager.deleteAllSubTasks();
+        taskManager.deleteAllEpics();
         HttpTaskServer.stop(0);
     }
 
     @Test
-    void StatusCode404_WhenEndpointIdIsIncorrect() throws IOException, InterruptedException {
+    void statusCode404_WhenEndpointIdIsIncorrect() throws IOException, InterruptedException {
         HttpClient client = HttpClient.newHttpClient();
         URI url = URI.create("http://localhost:8080/tasks/33");
         HttpRequest request = HttpRequest.newBuilder()
@@ -54,7 +54,7 @@ class HttpTaskManagerResponseCodesTest {
     }
 
     @Test
-    void StatusCode406_WhenTasksTimeOverlap() throws IOException, InterruptedException {
+    void statusCode406_WhenTasksTimeOverlap() throws IOException, InterruptedException {
         Task task = new Task("Task 1", "Description 1", 0, Progress.NEW,
                 LocalDateTime.of(2024, 5, 15, 0, 0), Duration.ofMinutes(15));
         Task task2 = new Task("Task 2", "Description 2", 1, Progress.NEW,
@@ -75,7 +75,7 @@ class HttpTaskManagerResponseCodesTest {
     }
 
     @Test
-    void StatusCode404_WhenTaskIdToDeleteIsIncorrect() throws IOException, InterruptedException {
+    void statusCode404_WhenTaskIdToDeleteIsIncorrect() throws IOException, InterruptedException {
         Task task = new Task("Task 3", "Description 3",
                 LocalDateTime.of(2024, 5, 15, 0, 30), Duration.ofMinutes(15));
         taskManager.addTask(task);
@@ -92,7 +92,7 @@ class HttpTaskManagerResponseCodesTest {
     }
 
     @Test
-    void StatusCode404_WhenEpicIdToDeleteIsIncorrect() throws IOException, InterruptedException {
+    void statusCode404_WhenEpicIdToDeleteIsIncorrect() throws IOException, InterruptedException {
         HttpClient client = HttpClient.newHttpClient();
         URI url = URI.create("http://localhost:8080/epics/3");
         HttpRequest request = HttpRequest.newBuilder()
@@ -104,6 +104,4 @@ class HttpTaskManagerResponseCodesTest {
 
         assertEquals(404, response.statusCode());
     }
-
-
 }

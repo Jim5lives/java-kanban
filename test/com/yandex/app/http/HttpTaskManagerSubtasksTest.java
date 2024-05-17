@@ -33,19 +33,19 @@ class HttpTaskManagerSubtasksTest {
     @BeforeEach
     public void setUp() throws IOException {
         httpTaskServer = new HttpTaskServer(taskManager);
-        taskManager.deleteAllTasks();
-        taskManager.deleteAllSubTasks();
-        taskManager.deleteAllEpics();
         HttpTaskServer.start();
     }
 
     @AfterEach
     public void shutDown() {
+        taskManager.deleteAllTasks();
+        taskManager.deleteAllSubTasks();
+        taskManager.deleteAllEpics();
         HttpTaskServer.stop(0);
     }
 
     @Test
-    void POST_SUBTASKS_shouldAddSubtaskWhenNoIdProvided() throws IOException, InterruptedException {
+    void postSubtasks_shouldAddSubtaskWhenNoIdProvided() throws IOException, InterruptedException {
         Epic epic = new Epic("Epic 1", "Description 1");
         taskManager.addEpic(epic);
         SubTask subtask = new SubTask("Subtask 1", "Description 1", 0,
@@ -68,7 +68,7 @@ class HttpTaskManagerSubtasksTest {
     }
 
     @Test
-    void UPDATE_SUBTASK_shouldUpdateSubtaskWhenIdIsProvided() throws IOException, InterruptedException {
+    void updateSubtask_shouldUpdateSubtaskWhenIdIsProvided() throws IOException, InterruptedException {
         Epic epic = new Epic("Epic 2", "Description 2");
         SubTask subtask = new SubTask("Subtask 2", "Description 2", 0,
                 LocalDateTime.of(2024, 5, 15, 0, 15), Duration.ofMinutes(15));
@@ -95,7 +95,7 @@ class HttpTaskManagerSubtasksTest {
     }
 
     @Test
-    void GET_SUBTASKS_shouldReturnAllSubtasksWhenNoIdIsProvided() throws IOException, InterruptedException {
+    void getSubtasks_shouldReturnAllSubtasksWhenNoIdIsProvided() throws IOException, InterruptedException {
         Epic epic = new Epic("Epic 2", "Description 2");
         SubTask subtask = new SubTask("Subtask 3", "Description 3", 0,
                 LocalDateTime.of(2024, 5, 15, 0, 30), Duration.ofMinutes(15));
@@ -120,7 +120,7 @@ class HttpTaskManagerSubtasksTest {
     }
 
     @Test
-    void GET_SUBTASK_shouldReturnExactSubtaskWhenIdIsProvided() throws IOException, InterruptedException {
+    void getSubtask_shouldReturnExactSubtaskWhenIdIsProvided() throws IOException, InterruptedException {
         Epic epic = new Epic("Epic 3", "Description 3");
         SubTask subtask = new SubTask("Subtask 5", "Description 5", 0,
                 LocalDateTime.of(2024, 5, 15, 1, 0), Duration.ofMinutes(15));
@@ -145,7 +145,7 @@ class HttpTaskManagerSubtasksTest {
     }
 
     @Test
-    void DELETE_SUBTASK_shouldDeleteExactSubtaskWhenIdIsProvided() throws IOException, InterruptedException {
+    void deleteSubtask_shouldDeleteExactSubtaskWhenIdIsProvided() throws IOException, InterruptedException {
         Epic epic = new Epic("Epic 4", "Description 4");
         SubTask subtask = new SubTask("Subtask 7", "Description 7", 0,
                 LocalDateTime.of(2024, 5, 15, 1, 30), Duration.ofMinutes(15));
@@ -170,7 +170,7 @@ class HttpTaskManagerSubtasksTest {
     }
 
     @Test
-    void DELETE_SUBTASKS_shouldDeleteAllSubtasksWhenNoIdIsProvided() throws IOException, InterruptedException {
+    void deleteSubtasks_shouldDeleteAllSubtasksWhenNoIdIsProvided() throws IOException, InterruptedException {
         Epic epic = new Epic("Epic 5", "Description 5");
         SubTask subtask = new SubTask("Subtask 9", "Description 9", 0,
                 LocalDateTime.of(2024, 5, 15, 2, 0), Duration.ofMinutes(15));
