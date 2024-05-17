@@ -34,11 +34,13 @@ public class InMemoryTaskManager implements TaskManager {
     //c. Получение по идентификатору.
     @Override
     public Task getTask(int id) {
-        Task task = tasks.get(id);
-        if (task != null) {
+        try {
+            Task task = tasks.get(id);
             historyManager.add(task);
+            return task;
+        } catch (NullPointerException e) {
+            throw new NotFoundException("Задача с id = %d не найдена.".formatted(id));
         }
-        return task;
     }
 
     //d. Создание. Сам объект должен передаваться в качестве параметра.
@@ -55,6 +57,9 @@ public class InMemoryTaskManager implements TaskManager {
     //e. Обновление. Новая версия объекта с верным идентификатором передаётся в виде параметра.
     @Override
     public Task updateTask(Task updatedTask) {
+        if (!tasks.containsKey(updatedTask.getId())) {
+            throw new NotFoundException("Задача с id = %d не найдена".formatted(updatedTask.getId()));
+        }
         if (isTaskTimeValid(updatedTask)) {
             checkCollisions(updatedTask);
         }
@@ -65,8 +70,12 @@ public class InMemoryTaskManager implements TaskManager {
     //f. Удаление по идентификатору.
     @Override
     public Task deleteTask(int id) {
+        if (!tasks.containsKey(id)) {
+            throw new NotFoundException("Задача с id = %d не найдена.".formatted(id));
+        }
         historyManager.remove(id);
         return tasks.remove(id);
+
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -89,11 +98,13 @@ public class InMemoryTaskManager implements TaskManager {
     //c. Получение по идентификатору.
     @Override
     public Epic getEpic(int id) {
-        Epic epic = epics.get(id);
-        if (epic != null) {
+        try {
+            Epic epic = epics.get(id);
             historyManager.add(epic);
+            return epic;
+        } catch (NullPointerException e) {
+            throw new NotFoundException("Эпик с id = %d не найден.".formatted(id));
         }
-        return epic;
     }
 
     //d. Создание. Сам объект должен передаваться в качестве параметра.
@@ -107,6 +118,9 @@ public class InMemoryTaskManager implements TaskManager {
     //e. Обновление. Новая версия объекта с верным идентификатором передаётся в виде параметра.
     @Override
     public Epic updateEpic(Epic updatedEpic) {
+        if (!epics.containsKey(updatedEpic.getId())) {
+            throw new NotFoundException("Эпик с id = %d не найден".formatted(updatedEpic.getId()));
+        }
         Epic oldEpic = epics.get(updatedEpic.getId());
         oldEpic.setName(updatedEpic.getName());
         oldEpic.setDescription(updatedEpic.getDescription());
@@ -116,6 +130,9 @@ public class InMemoryTaskManager implements TaskManager {
     //f. Удаление по идентификатору.
     @Override
     public Epic deleteEpic(int id) {
+        if (!epics.containsKey(id)) {
+            throw new NotFoundException("Эпик с id = %d не найден.".formatted(id));
+        }
         getSubtasksFromEpic(id).stream().map(SubTask::getId).forEach(subTaskId -> {
             subTasks.remove(subTaskId);
             historyManager.remove(subTaskId);
@@ -124,9 +141,10 @@ public class InMemoryTaskManager implements TaskManager {
         return epics.remove(id);
     }
 
+
     //------------------------------------------------------------------------------------------------------------------
-    // SUBTASKS
-    //a. Получение списка всех подзадач.
+// SUBTASKS
+//a. Получение списка всех подзадач.
     @Override
     public List<SubTask> getAllSubTasks() {
         return new ArrayList<>(subTasks.values());
@@ -147,11 +165,13 @@ public class InMemoryTaskManager implements TaskManager {
     //c. Получение по идентификатору.
     @Override
     public SubTask getSubtask(int id) {
-        SubTask subTask = subTasks.get(id);
-        if (subTask != null) {
+        try {
+            SubTask subTask = subTasks.get(id);
             historyManager.add(subTask);
+            return subTask;
+        } catch (NullPointerException e) {
+            throw new NotFoundException("Подзадача с id = %d не найдена.".formatted(id));
         }
-        return subTask;
     }
 
     //d. Создание. Сам объект должен передаваться в качестве параметра.
@@ -172,6 +192,9 @@ public class InMemoryTaskManager implements TaskManager {
     //e. Обновление. Новая версия объекта с верным идентификатором передаётся в виде параметра.
     @Override
     public SubTask updateSubTask(SubTask updatedSubTask) {
+        if (!subTasks.containsKey(updatedSubTask.getId())) {
+            throw new NotFoundException("Подзадача с id = %d не найдена".formatted(updatedSubTask.getId()));
+        }
         if (isTaskTimeValid(updatedSubTask)) {
             checkCollisions(updatedSubTask);
         }
@@ -184,6 +207,9 @@ public class InMemoryTaskManager implements TaskManager {
     //f. Удаление по идентификатору.
     @Override
     public SubTask deleteSubtask(int id) {
+        if (!subTasks.containsKey(id)) {
+            throw new NotFoundException("Подзадача с id = %d не найдена.".formatted(id));
+        }
         SubTask subTask = subTasks.get(id);
         Epic linkedEpic = epics.get(subTask.getEpicId());
         linkedEpic.removeSubTaskFromEpic(subTask.getId());
@@ -191,6 +217,7 @@ public class InMemoryTaskManager implements TaskManager {
         setEpicEndTimeAndStartTime(linkedEpic);
         historyManager.remove(id);
         return subTasks.remove(id);
+
     }
 
     //----------------------------------------------------------------------------------------------------------------------
@@ -284,7 +311,7 @@ public class InMemoryTaskManager implements TaskManager {
     private void checkCollisions(Task newTask) {
         Instant newStartInstant = newTask.getStartTime();
         Instant newEndInstant = newTask.getEndTime();
-        boolean tasksCollide =  getPrioritizedTasks().stream()
+        boolean tasksCollide = getPrioritizedTasks().stream()
                 .filter(task -> task.getId() != newTask.getId())
                 .anyMatch(task -> newStartInstant.isBefore(task.getEndTime())
                         && newEndInstant.isAfter(task.getStartTime()));
@@ -293,7 +320,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     //метод для валидации времени в таске
     private boolean isTaskTimeValid(Task task) {
-       return task.getDuration() != null && task.getStartTime() != null && task.getDuration().toMinutes() != 0;
+        return task.getDuration() != null && task.getStartTime() != null && task.getDuration().toMinutes() != 0;
     }
 
 
